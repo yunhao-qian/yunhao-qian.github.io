@@ -30,18 +30,6 @@ plugins:
   - jekyll-remote-theme
   - jekyll-seo-tag
 
-kramdown:
-  math_engine: null
-
-defaults:
-  -
-    scope:
-      path: ""
-      type: "posts"
-    values:
-      layout: post
-      use_katex: true
-
 title: Yunhao Qian
 author:
   name: Yunhao Qian
@@ -50,7 +38,28 @@ description: >
   Hi! I'm Yunhao, an EngSci 2T3 majoring in Machine Intelligence at UofT.
   Welcome to my personal website :-)
 
+header_pages:
+  - about.md
+
+kramdown:
+  math_engine: null
+
+defaults:
+  -
+    scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+  -
+    scope:
+      path: ""
+    values:
+      use_katex: true
+
 minima:
+  skin: dark
+
   social_links:
     github: yunhao-qian
     facebook: yunhao.qian.7
