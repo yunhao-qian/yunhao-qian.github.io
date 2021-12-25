@@ -102,7 +102,7 @@ $$
 \sum_{i = 1}^n \hat{c}_i = \left( \sum_{i = 1}^n c_i \right) + \Phi(D_n) - \Phi(D_0) \text{,}
 $$
 
-which is greater than the total actual cost $\sum_{i = 1}^n c_i$ as long as $\Phi(D_i) \geq \Phi(D_0)$ for all $i$.
+which is no less than the total actual cost $\sum_{i = 1}^n c_i$ as long as $\Phi(D_i) \geq \Phi(D_0)$ for all $i$.
 
 ### Stack operations
 
@@ -131,10 +131,10 @@ $$
 
 In both cases, $b_i \leq b_{i - 1} - t_i + 1$.
 
-Because:
+Because
 
-* Potential difference: $b_i - b_{i - 1} \leq 1 - t_i$
-* Actual cost $\leq t_i + 1$
+* Potential difference: $b_i - b_{i - 1} \leq 1 - t_i$, and
+* Actual cost $\leq t_i + 1$,
 
 the amortized cost per operation is $(1 - t_i) + (t_i + 1) = 2$.
 

@@ -53,7 +53,8 @@ defaults:
       layout: post
   -
     scope:
-      path: ""
+      path: clrs
+      type: posts
     values:
       use_katex: true
 
