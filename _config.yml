@@ -41,9 +41,6 @@ description: >
 header_pages:
   - about.md
 
-kramdown:
-  math_engine: null
-
 defaults:
   -
     scope:
