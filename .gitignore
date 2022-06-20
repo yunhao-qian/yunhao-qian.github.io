@@ -1,5 +1,8 @@
-_site
+.DS_Store
+__MACOSX
+
 .jekyll-cache
 .jekyll-metadata
 .sass-cache
+_site
 vendor

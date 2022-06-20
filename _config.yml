@@ -20,8 +20,7 @@
 
 domain: yunhao-qian.github.io
 url: https://yunhao-qian.github.io
-baseurl: "" # the subpath of your site, e.g. /blog
-repository: yunhao-qian/yunhao-qian.github.io
+baseurl: ""
 
 # Build settings
 remote_theme: jekyll/minima
@@ -30,37 +29,19 @@ plugins:
   - jekyll-remote-theme
   - jekyll-seo-tag
 
-title: Yunhao Qian
+title: Yunhao Qian's Website
 author:
   name: Yunhao Qian
   email: yunhaoqian@hotmail.com
-description: >
-  Hi! I'm Yunhao, an EngSci 2T3 majoring in Machine Intelligence at UofT.
-  Welcome to my personal website :-)
-
-header_pages:
-  - about.md
-
-defaults:
-  -
-    scope:
-      path: ""
-      type: posts
-    values:
-      layout: post
-  -
-    scope:
-      path: clrs
-      type: posts
-    values:
-      use_katex: true
+description: >-
+  Hi! I'm Yunhao, a 3rd-year EngSci student from UofT. I'm majoring in Machine
+  Intelligence and currently work as a PEY Co-op student at Cerebras. Welcome to
+  my personal website :-)
 
 minima:
   skin: dark
-
   social_links:
     github: yunhao-qian
-    facebook: yunhao.qian.7
     linkedin: yunhao-qian-026980170
 
 # Exclude from processing.
@@ -70,14 +51,14 @@ minima:
 #
 # Excluded items can be processed by explicitly listing the directories or
 # their entries' file path in the `include:` list.
-#
+
 exclude:
-  - .sass-cache/
   - .jekyll-cache/
+  - .sass-cache/
   - .vscode/
-  - gemfiles/
   - Gemfile
   - Gemfile.lock
+  - gemfiles/
   - node_modules/
   - vendor/bundle/
   - vendor/cache/
