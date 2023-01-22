@@ -76,7 +76,8 @@ function draw() {
         flag_1 = explainError(
           second_1,
           compass_measured,
-          compass_sun_direction
+          compass_sun_direction,
+          "rgba(255, 32, 32, 0.5)"
         );
       });
     } else if (currentPageName === "error-local-time-page" && !flag_2) {
@@ -88,7 +89,8 @@ function draw() {
         flag_2 = explainError(
           second_2,
           compass_sun_direction,
-          compass_local_time
+          compass_local_time,
+          "rgba(32, 255, 32, 0.5)"
         );
       });
     } else if (currentPageName === "error-system-error-page" && !flag_3) {
@@ -97,7 +99,12 @@ function draw() {
         second_3 = now_3.getSeconds() + now_3.getMilliseconds() / 1000;
       }
       requestAnimationFrame(() => {
-        flag_3 = explainError(second_3, compass_local_time, compass_true);
+        flag_3 = explainError(
+          second_3,
+          compass_local_time,
+          compass_true,
+          "rgba(32, 32, 255, 0.5)"
+        );
       });
     }
   }
@@ -224,7 +231,7 @@ function drawHand(ctx, pos, length, width, lineCap = "round", dotted = false) {
   }
 }
 
-function explainError(old_second, compass1, compass2, speed = 1 / 6) {
+function explainError(old_second, compass1, compass2, fillColor, speed = 1 / 6) {
   if (compass2 - compass1 > Math.PI) {
     compass2 -= 2 * Math.PI;
   } else if (compass2 - compass1 < -Math.PI) {
@@ -273,7 +280,7 @@ function explainError(old_second, compass1, compass2, speed = 1 / 6) {
       compass1 - Math.PI / 2
     );
     ctx.lineTo(0, 0);
-    ctx.fillStyle = "blue";
+    ctx.fillStyle = fillColor;
     ctx.fill();
 
     drawHand(
