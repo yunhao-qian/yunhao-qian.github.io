@@ -36,6 +36,8 @@ function clear() {
   not_init = true;
 }
 
+let compass_measured = null;
+
 function draw() {
   if (!clockPageIDs.slice(-3).includes(currentPageName)) {
     clock();
@@ -44,7 +46,6 @@ function draw() {
       let now = new Date();
       let [hour, minute, second] = calcTime(now);
 
-      let compass_measured = null;
       if (now.getHours() < 12) {
         // Morning
         compass_measured = (Math.PI * 2 + hour) / 2;
