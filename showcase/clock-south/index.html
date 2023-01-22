@@ -1,0 +1,346 @@
+<!-- reference: https://www.w3schools.com/graphics/canvas_clock.asp -->
+
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+  <title>UofTHacks X</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --background-color: #181018;
+      --text-color: #FFFFFF;
+      --accent-color: #8B108B;
+      --accent-color-lighter: #9B209B;
+      --accent-color-darker: #7B007B;
+      --accent-color-disabled: #776677;
+      --text-padding: 8vw;
+      --page-switch-duration: 0.5s;
+    }
+
+    html {
+      background: var(--background-color);
+      color: var(--text-color);
+      font-family: Roboto;
+      font-size: 5vw;
+      line-height: 1.3;
+    }
+
+    p {
+      margin-top: 0.45em;
+      margin-bottom: 0.45em;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    .scrollable {
+      overflow-y: scroll;
+    }
+
+    .navigation-buttons {
+      position: absolute;
+      top: calc(100% - 15vh);
+      left: 0px;
+      right: 0px;
+      bottom: 0px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-around;
+    }
+
+    .accented-button {
+      border-radius: 2vw;
+      background-color: var(--accent-color);
+      font-size: 6vw;
+      padding: 3vw;
+      width: 40vw;
+      text-align: center;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    .accented-button:hover {
+      background-color: var(--accent-color-lighter);
+    }
+
+    .accented-button:active {
+      background-color: var(--accent-color-darker);
+    }
+
+    .accented-button.button-disabled {
+      background-color: var(--accent-color-disabled);
+    }
+
+    #top-container {
+      position: fixed;
+      top: 0px;
+      left: 0px;
+      right: 0px;
+      bottom: 0px;
+    }
+
+    #splash-page,
+    #main-pages {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      right: 0px;
+      bottom: 0px;
+    }
+
+    #splash-page-texts,
+    #thank-you-page {
+      padding: var(--text-padding);
+      font-size: 9vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #splash-page-texts,
+    #pages-without-navigation-buttons {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      right: 0px;
+      bottom: 15vh;
+    }
+
+    #introduction-page,
+    #clock-pages,
+    #thank-you-page {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      right: 0px;
+      bottom: 0px;
+    }
+
+    #clock-container {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      right: 0px;
+      bottom: calc(100% - 100vw);
+    }
+
+    #pages-without-clock {
+      position: absolute;
+      top: 100vw;
+      left: 0px;
+      right: 0px;
+      bottom: 0px;
+    }
+
+    #point-towards-sun-page,
+    #bisector-pointing-south-page,
+    #real-south-direction-page,
+    #error-sun-direction-page,
+    #error-local-time-page,
+    #error-system-error-page {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      right: 0px;
+      bottom: 0px;
+    }
+
+    .at-splash-page #main-pages,
+    .at-introduction-page #splash-page,
+    .at-introduction-page #clock-pages,
+    .at-introduction-page #clock-pages *[id$="-page"],
+    .at-introduction-page #thank-you-page,
+    .at-clock-pages #splash-page,
+    .at-clock-pages #introduction-page,
+    .at-clock-pages #thank-you-page,
+    .at-point-towards-sun-page #pages-without-clock>:not(#point-towards-sun-page),
+    .at-bisector-pointing-south-page #pages-without-clock>:not(#bisector-pointing-south-page),
+    .at-real-south-direction-page #pages-without-clock>:not(#real-south-direction-page),
+    .at-error-sun-direction-page #pages-without-clock>:not(#error-sun-direction-page),
+    .at-error-local-time-page #pages-without-clock>:not(#error-local-time-page),
+    .at-error-system-error-page #pages-without-clock>:not(#error-system-error-page),
+    .at-thank-you-page #splash-page,
+    .at-thank-you-page #introduction-page,
+    .at-thank-you-page #clock-pages,
+    .at-thank-you-page #clock-pages *[id$="-page"] {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .at-introduction-page #splash-page,
+    .at-point-towards-sun-page #introduction-page,
+    .at-point-towards-sun-page #bisector-pointing-south-page,
+    .at-bisector-pointing-south-page #point-towards-sun-page,
+    .at-bisector-pointing-south-page #real-south-direction-page,
+    .at-real-south-direction-page #bisector-pointing-south-page,
+    .at-real-south-direction-page #error-sun-direction-page,
+    .at-error-sun-direction-page #real-south-direction-page,
+    .at-error-sun-direction-page #error-local-time-page,
+    .at-error-local-time-page #error-sun-direction-page,
+    .at-error-local-time-page #error-system-error-page,
+    .at-error-system-error-page #error-local-time-page,
+    .at-error-system-error-page #thank-you-page {
+      transition: opacity var(--page-switch-duration) ease-out 0s, visibility 0s step-end var(--page-switch-duration);
+    }
+
+    .at-introduction-page #main-pages,
+    .at-introduction-page #introduction-page,
+    .at-point-towards-sun-page #clock-pages,
+    .at-point-towards-sun-page #point-towards-sun-page,
+    .at-bisector-pointing-south-page #bisector-pointing-south-page,
+    .at-real-south-direction-page #real-south-direction-page,
+    .at-error-sun-direction-page #error-sun-direction-page,
+    .at-error-local-time-page #error-local-time-page,
+    .at-error-system-error-page #clock-pages,
+    .at-error-system-error-page #error-system-error-page,
+    .at-thank-you-page #thank-you-page {
+      transition: opacity var(--page-switch-duration) ease-in 0s;
+    }
+
+    #introduction-page {
+      padding: var(--text-padding);
+      font-size: 6.25vw;
+    }
+
+    #point-towards-sun-page {
+      padding: var(--text-padding);
+      font-size: 6.25vw;
+    }
+
+    #bisector-pointing-south-page {
+      padding: var(--text-padding);
+      font-size: 6.25vw;
+    }
+
+    #real-south-direction-page {
+      padding: var(--text-padding);
+      font-size: 6.25vw;
+    }
+
+    #error-sun-direction-page {
+      padding: var(--text-padding);
+      font-size: 5vw;
+    }
+
+    #error-local-time-page {
+      padding: var(--text-padding);
+      font-size: 5vw;
+    }
+
+    #error-system-error-page {
+      padding: var(--text-padding);
+      font-size: 5vw;
+    }
+
+    .rainbow-text {
+      background-image: linear-gradient(45deg, rgb(253, 191, 253), rgb(183, 180, 241), rgb(154, 210, 219), rgb(239, 196, 165));
+      color: transparent;
+      background-clip: text;
+      -webkit-background-clip: text;
+    }
+  </style>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div id="top-container" , class="at-splash-page">
+    <div id="splash-page">
+      <div id="splash-page-texts" class="scrollable">
+        <div class="rainbow-text">
+          <p>Did you know you can find south using a clock?</p>
+          <p>Follow this guide to find out!</p>
+        </div>
+      </div>
+      <div class="navigation-buttons">
+        <div id="splash-start-button" class="accented-button" onclick="onSplashStartButtonClicked()">Start</div>
+      </div>
+    </div>
+
+    <div id="main-pages">
+      <div id="pages-without-navigation-buttons">
+        <div id="introduction-page" class="scrollable">
+          <div class="rainbow-text">
+            <p>If you are lost in a wild area, do you know that an analog clock can help you find out the directions?
+            </p>
+            <p>If you heard about this before, did you ever doubt how accurate this method is?</p>
+            <p>In this guide, you will use your phone as an analog clock to practice the process...</p>
+            <p>And test your accuracy with the compass of your phone!</p>
+          </div>
+        </div>
+
+        <div id="clock-pages">
+          <div id="clock-container">
+            <canvas id="canvas"> </canvas>
+          </div>
+
+          <div id="pages-without-clock">
+            <div id="point-towards-sun-page" class="scrollable">
+              <div class="rainbow-text">
+                <p>Lay the clock horizontally,</p>
+                <p>And point the hour hand of the clock at the sun.</p>
+              </div>
+            </div>
+            <div id="bisector-pointing-south-page" class="scrollable">
+              <div class="rainbow-text">
+                <p>The middle point between the hour hand and the 12 o'clock direction approximately indicates south.
+                </p>
+              </div>
+            </div>
+            <div id="real-south-direction-page" class="scrollable">
+              <div class="rainbow-text">
+                <p>Check you result against the true south direction.</p>
+              </div>
+            </div>
+            <div id="error-sun-direction-page" class="scrollable">
+              <div class="rainbow-text">
+                <p>Why your result might be inaccurate?</p>
+                <p>If your environment did not have direct sunlight, like in a cloudy day, finding the orientation of
+                  the sun can be difficult.</p>
+                <p>This animation shows what your result would be if you were pointing at the sun precisely.</p>
+              </div>
+            </div>
+            <div id="error-local-time-page" class="scrollable">
+              <div class="rainbow-text">
+                <p>The method assumes your clock follows the local mean time,</p>
+                <p>But your clock actually follows the time of the time zone your are at, which is slightly different.
+                </p>
+                <p>This animation shows what your result would be if your clock followed the local mean time.</p>
+              </div>
+            </div>
+            <div id="error-system-error-page" class="scrollable">
+              <div class="rainbow-text">
+                <p>Moreover, this method gives only approximated results, with small but inherent system errors.</p>
+                <p>This animation shows the true south direction.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="thank-you-page" class="scrollable">
+          <div class="rainbow-text">
+            <h2>Thank you for your listening!</h2>
+          </div>
+        </div>
+      </div>
+
+      <div id="previous-next-buttons" class="navigation-buttons">
+        <div class="accented-button" id="previous-button">Previous</div>
+        <div class="accented-button" id="next-button">Next</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="suncalc.js"></script>
+  <script src="index.js"></script>
+  <script src="clock.js"></script>
+  <script src="direction.js"></script>
+</body>
+
+</html>
