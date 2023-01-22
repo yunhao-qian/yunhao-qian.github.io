@@ -10,10 +10,7 @@ function direction(hour = 0) {
     new Date(),
     geolocationCoords.latitude,
     geolocationCoords.longitude
-  ).azimuth;
-
-  azimuth -= Math.PI;
-  azimuth = azimuth < 0 ? azimuth + 2 * Math.PI : azimuth;
+  ).azimuth + Math.PI;
 
   console.log("azimuth, ", azimuth);
 
@@ -58,16 +55,9 @@ function direction(hour = 0) {
     getEquationOfTime() / 60;
 
   // apparentSolarTime: is the true solar time in hours
-
-  compass_sun_direction = azimuth - hour / 2;
-  compass_local_time = azimuth - apparentSolarTime / 2;
-
-  compass_sun_direction = compass_sun_direction < 0 ? compass_sun_direction + 2 * Math.PI : compass_sun_direction;
-  compass_local_time = compass_local_time < 0 ? compass_local_time + 2 * Math.PI : compass_local_time;
-
-  compass_sun_direction = compass_sun_direction > 2 * Math.PI ? compass_sun_direction - 2 * Math.PI : compass_sun_direction;
-  compass_local_time = compass_local_time > 2 * Math.PI ? compass_local_time - 2 * Math.PI : compass_local_time;
-  compass_true = Math.PI - compassHeading;
+  let compass_sun_direction = azimuth + (1 - hour / 12) * Math.PI;
+  let compass_local_time = azimuth + (1 - apparentSolarTime / 12) * Math.PI;
+  let compass_true = Math.PI - compassHeading;
 
   return [compass_sun_direction, compass_local_time, compass_true];
 }
