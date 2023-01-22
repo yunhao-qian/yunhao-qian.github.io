@@ -41,9 +41,17 @@ function draw() {
     clock();
   } else {
     if (not_init) {
-      let [hour, minute, second] = calcTime();
+      let now = new Date();
+      let [hour, minute, second] = calcTime(now);
 
-      compass_measured = hour / 2;
+      let compass_measured = null;
+      if (now.getHours() < 12) {
+        // Morning
+        compass_measured = (Math.PI * 2 + hour) / 2;
+      } else {
+        // Afternoon
+        compass_measured = hour / 2;
+      }
 
       [compass_sun_direction, compass_local_time, compass_true] =
         direction(hour);
@@ -95,8 +103,7 @@ function draw() {
   window.requestAnimationFrame(draw);
 }
 
-function calcTime() {
-  var now = new Date();
+function calcTime(now) {
   var hour = now.getHours();
   var minute = now.getMinutes();
   var second = now.getSeconds();
@@ -164,7 +171,8 @@ function clock() {
   ctx.clearRect(-dim / 2, -dim / 2, dim, dim);
   drawClockFaceWithNumber();
 
-  let [hour, minute, second] = calcTime();
+  let now = new Date()
+  let [hour, minute, second] = calcTime(now);
 
   drawTime(ctx, radius, hour, minute, second);
 
@@ -177,7 +185,14 @@ function clock() {
       // draw the dotted line to 12 o'clock
       drawHand(ctx, 0, radius, radius * 0.01, "square", true);
       // draw the line bisecting 12 o'clock and hour hand
-      drawHand(ctx, hour / 2, radius, radius * 0.02, "square");
+      if (now.getHours() < 12) {
+        // Morning
+        bisect = (Math.PI * 2 + hour) / 2;
+      } else {
+        // Afternoon
+        bisect = hour / 2;
+      }
+      drawHand(ctx, bisect, radius, radius * 0.02, "square");
     }
 
     if (currentPageName === "real-south-direction-page") {
