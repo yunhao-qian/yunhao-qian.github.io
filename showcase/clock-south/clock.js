@@ -259,7 +259,7 @@ function explainError(old_second, compass1, compass2, fillColor, speed = 1 / 6) 
       compass1 + second * Math.PI * speed - Math.PI / 2
     );
     ctx.lineTo(0, 0);
-    ctx.fillStyle = "blue";
+    ctx.fillStyle = fillColor;
     ctx.fill();
 
     drawHand(
