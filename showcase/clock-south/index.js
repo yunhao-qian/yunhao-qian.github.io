@@ -39,10 +39,10 @@ let geolocationCoords = null;
 function handleDeviceOrientation(event) {
   deviceOrientationEvent = event;
   let headingInDegrees;
-  if (event.hasOwnProperty("webkitCompassHeading")) {
+  if (webkitCompassHeading in event) {
     headingInDegrees = event.webkitCompassHeading;
   } else {
-    headingInDegrees = 360 - event.webkitCompassHeading;
+    headingInDegrees = 360 - event.alpha;
   }
   compassHeading = headingInDegrees / (180 / Math.PI);
 }
