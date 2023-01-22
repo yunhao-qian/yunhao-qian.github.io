@@ -64,7 +64,7 @@ function direction(now, hour = 0) {
   } else {
     compass_sun_direction = azimuth - hour / 2 - compassHeading;
   }
-  let compass_local_time = azimuth + (1 - hour / 12) * Math.PI - compassHeading;
+  let compass_local_time = azimuth + (1 - apparentSolarTime / 12) * Math.PI - compassHeading;
   let compass_true = Math.PI - compassHeading;
 
   return [compass_sun_direction, compass_local_time, compass_true];
