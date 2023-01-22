@@ -61,15 +61,13 @@ function direction(hour = 0) {
 
   compass_sun_direction = azimuth - hour / 2;
   compass_local_time = azimuth - apparentSolarTime / 2;
-  compass_true = orientationWrtXAxis;
 
   compass_sun_direction = compass_sun_direction < 0 ? compass_sun_direction + 2 * Math.PI : compass_sun_direction;
   compass_local_time = compass_local_time < 0 ? compass_local_time + 2 * Math.PI : compass_local_time;
-  compass_true = compass_true < 0 ? compass_true + 2 * Math.PI : compass_true;
 
   compass_sun_direction = compass_sun_direction > 2 * Math.PI ? compass_sun_direction - 2 * Math.PI : compass_sun_direction;
   compass_local_time = compass_local_time > 2 * Math.PI ? compass_local_time - 2 * Math.PI : compass_local_time;
-  compass_true = compass_true > 2 * Math.PI ? compass_true - 2 * Math.PI : compass_true;
+  compass_true = Math.PI - compassHeading;
 
   return [compass_sun_direction, compass_local_time, compass_true];
 }

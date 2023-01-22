@@ -188,6 +188,9 @@ function clock() {
   }
 }
 
+/**
+ * @param pos Clockwise angle from the 12 o'clock direction, in radians.
+ */
 function drawHand(ctx, pos, length, width, lineCap = "round", dotted = false) {
   if (dotted) {
     ctx.setLineDash([20, 15]);
@@ -199,7 +202,7 @@ function drawHand(ctx, pos, length, width, lineCap = "round", dotted = false) {
   ctx.rotate(pos);
   ctx.lineTo(0, -length);
   ctx.stroke();
-  ctx.rotate(-pos);
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
   if (dotted) {
     ctx.setLineDash([]);
   }
