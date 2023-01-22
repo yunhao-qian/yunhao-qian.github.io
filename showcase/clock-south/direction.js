@@ -60,9 +60,9 @@ function direction(now, hour = 0) {
   // apparentSolarTime: is the true solar time in hours
   let compass_sun_direction = null;
   if (now.getHours() < 12) {
-    compass_sun_direction = azimuth - hour / 2 - compassHeading
+    compass_sun_direction = azimuth - hour / 2 + Math.PI - compassHeading
   } else {
-    compass_sun_direction = azimuth - hour / 2 + Math.PI - compassHeading;
+    compass_sun_direction = azimuth - hour / 2 - compassHeading;
   }
   let compass_local_time = azimuth + (1 - hour / 12) * Math.PI - compassHeading;
   let compass_true = Math.PI - compassHeading;
