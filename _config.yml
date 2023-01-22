@@ -38,11 +38,6 @@ description: >-
   Intelligence and currently work as a PEY Co-op student at Cerebras. Welcome to
   my personal website :-)
 
-minima:
-  skin: dark
-  social_links:
-    linkedin: yunhao-qian-026980170
-
 # Exclude from processing.
 # The following items will not be processed, by default.
 # Any item listed under the `exclude:` key here will be automatically added to
