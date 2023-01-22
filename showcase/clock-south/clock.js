@@ -298,7 +298,7 @@ function explainError(old_second, compass1, compass2, fillColor, speed = 1 / 6) 
     (compass1 >= compass2 && compass1 - second * Math.PI * speed >= compass2)
   ) {
     requestAnimationFrame(() => {
-      explainError(old_second, compass1, compass2);
+      explainError(old_second, compass1, compass2, fillColor);
     });
   } else {
     return true;
