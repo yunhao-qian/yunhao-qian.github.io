@@ -202,7 +202,7 @@ function drawHand(ctx, pos, length, width, lineCap = "round", dotted = false) {
   ctx.rotate(pos);
   ctx.lineTo(0, -length);
   ctx.stroke();
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.rotate(-pos);
   if (dotted) {
     ctx.setLineDash([]);
   }
