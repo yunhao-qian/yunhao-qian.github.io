@@ -26,6 +26,8 @@ function disableButton(button) {
  */
 let compassHeading = null;
 
+let deviceOrientationEvent = null;
+
 /**
  * The following 3 properties of the object are of interest.
  * - altitude
@@ -35,6 +37,7 @@ let compassHeading = null;
 let geolocationCoords = null;
 
 function handleDeviceOrientation(event) {
+  deviceOrientationEvent = event;
   let headingInDegrees;
   if (event.hasOwnProperty("webkitCompassHeading")) {
     headingInDegrees = event.webkitCompassHeading;
