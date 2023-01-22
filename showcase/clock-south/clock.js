@@ -54,7 +54,7 @@ function draw() {
       }
 
       [compass_sun_direction, compass_local_time, compass_true] =
-        direction(hour);
+        direction(now, hour);
 
       console.log(
         compass_measured,
@@ -197,7 +197,7 @@ function clock() {
 
     if (currentPageName === "real-south-direction-page") {
       [compass_sun_direction, compass_local_time, compass_true] =
-        direction(hour);
+        direction(now, hour);
       drawHand(ctx, compass_true, radius, radius * 0.02, "square");
     }
   }

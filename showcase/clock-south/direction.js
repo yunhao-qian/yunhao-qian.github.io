@@ -5,12 +5,15 @@
 //   accuracy: 1000,
 // };
 
-function direction(hour = 0) {
-  var azimuth = SunCalc.getPosition(
+function direction(now, hour = 0) {
+  let azimuth = SunCalc.getPosition(
     new Date(),
     geolocationCoords.latitude,
     geolocationCoords.longitude
-  ).azimuth + Math.PI;
+  ).azimuth - Math.PI;
+  if (azimuth < 0) {
+    azimuth += Math.PI * 2;
+  }
 
   console.log("azimuth, ", azimuth);
 
@@ -55,7 +58,12 @@ function direction(hour = 0) {
     getEquationOfTime() / 60;
 
   // apparentSolarTime: is the true solar time in hours
-  let compass_sun_direction = azimuth + (1 - hour / 12) * Math.PI;
+  let compass_sun_direction = null;
+  if (now.getHours() < 12) {
+    compass_sun_direction = azimuth - hour / 2 + Math.PI;
+  } else {
+    compass_sun_direction = azimuth - hour / 2;
+  }
   let compass_local_time = azimuth + (1 - apparentSolarTime / 12) * Math.PI;
   let compass_true = Math.PI - compassHeading;
 
