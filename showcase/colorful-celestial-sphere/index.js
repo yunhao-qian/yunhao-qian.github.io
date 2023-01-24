@@ -131,7 +131,7 @@ function paintCanvas() {
         drawTextWithWrapping("Loading...");
         return;
     }
-    drawTextWithWrapping(screenAndDeviceOrientation + "");
+    drawTextWithWrapping(`screenAngle: ${screenAndDeviceOrientation.screenAngle}, alpha: ${screenAndDeviceOrientation.alpha}, beta: ${screenAndDeviceOrientation.beta}, gamma: ${screenAndDeviceOrientation.gamma}`);
     requestAnimationFrame(paintCanvas);
 }
 function drawTextWithWrapping(text) {
