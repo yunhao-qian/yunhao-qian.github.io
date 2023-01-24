@@ -8,13 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 const canvasElement = document.querySelector("#canvas");
-let canvasContext = null;
+const canvasContext = canvasElement.getContext("2d", { alpha: true });
 let deviceOrientationPermissionState = "unknown";
+let screenAndDeviceOrientation = null;
 main();
 function main() {
     handleOrientationPermission();
-    window.onresize = onWindowResize;
+    window.addEventListener("resize", onWindowResize);
     onWindowResize();
+    if (deviceOrientationPermissionState === "granted") {
+        startRenderLoop();
+    }
 }
 function handleOrientationPermission() {
     if (typeof DeviceOrientationEvent === "undefined" || typeof DeviceOrientationEvent.requestPermission !== "function") {
@@ -25,33 +29,92 @@ function handleOrientationPermission() {
             const response = yield DeviceOrientationEvent.requestPermission();
             if (response === "granted") {
                 deviceOrientationPermissionState = "granted";
+                startRenderLoop();
             }
             else {
                 deviceOrientationPermissionState = "denied";
+                paintCanvas();
             }
-            paintCanvas();
         }), { once: true });
     }
 }
 function onWindowResize() {
-    if (canvasContext !== null) {
-        canvasContext.fillStyle = "black";
-        canvasContext.fillRect(0, 0, canvasElement.width, canvasElement.height);
-    }
+    canvasContext.fillStyle = "black";
+    canvasContext.fillRect(0, 0, canvasElement.width, canvasElement.height);
     canvasElement.style.width = `${window.innerWidth}px`;
     canvasElement.style.height = `${window.innerHeight}px`;
     canvasElement.width = window.innerWidth;
     canvasElement.height = window.innerHeight;
-    canvasContext = canvasElement.getContext("2d", { alpha: true });
+    paintCanvas();
+}
+function startRenderLoop() {
+    function updateScreenOrientation() {
+        if ("orientation" in window.screen) {
+            const angle = window.screen.orientation.angle;
+            console.assert(angle === 0 || angle === 90 || angle === 180 || angle == 270);
+            screenAndDeviceOrientation.screenAngle = angle;
+        }
+        else {
+            switch (window.orientation) {
+                case -90:
+                    screenAndDeviceOrientation.screenAngle = 90;
+                    break;
+                case 0:
+                    screenAndDeviceOrientation.screenAngle = 0;
+                    break;
+                case 90:
+                    screenAndDeviceOrientation.screenAngle = 270;
+                    break;
+                case 180:
+                    screenAndDeviceOrientation.screenAngle = 180;
+                    break;
+                default:
+                    console.error("Invalid value of window orientation", window.orientation);
+            }
+        }
+    }
+    function updateDeviceOrientation(event) {
+        const initialUpdate = screenAndDeviceOrientation.alpha === null;
+        if ("webkitCompassHeading" in event) {
+            screenAndDeviceOrientation.alpha = (360 - event.webkitCompassHeading) / degreeToRadian;
+        }
+        else {
+            screenAndDeviceOrientation.alpha = event.alpha / degreeToRadian;
+        }
+        screenAndDeviceOrientation.beta = event.beta / degreeToRadian;
+        screenAndDeviceOrientation.gamma = event.gamma / degreeToRadian;
+        if (initialUpdate) {
+            paintCanvas();
+        }
+    }
+    screenAndDeviceOrientation = {
+        screenAngle: 0,
+        alpha: null,
+        beta: null,
+        gamma: null,
+    };
+    if ("orientation" in window.screen) {
+        window.screen.orientation.onchange = updateScreenOrientation;
+    }
+    else {
+        window.addEventListener("orientationchange", updateScreenOrientation);
+    }
+    updateScreenOrientation();
+    const degreeToRadian = 90 / Math.PI;
+    if ("ondeviceorientationabsolute" in window) {
+        window.addEventListener("deviceorientationabsolute", updateDeviceOrientation);
+    }
+    else {
+        window.addEventListener("deviceorientation", updateDeviceOrientation);
+    }
     paintCanvas();
 }
 function paintCanvas() {
-    console.assert(canvasContext !== null);
+    canvasContext.fillStyle = "black";
+    canvasContext.fillRect(0, 0, canvasElement.width, canvasElement.height);
+    canvasContext.fillStyle = "white";
+    canvasContext.font = "6vmin monospace";
     if (deviceOrientationPermissionState !== "granted") {
-        canvasContext.fillStyle = "black";
-        canvasContext.fillRect(0, 0, canvasElement.width, canvasElement.height);
-        canvasContext.fillStyle = "white";
-        canvasContext.font = "6vmin monospace";
         switch (deviceOrientationPermissionState) {
             case "unknown":
                 drawTextWithWrapping("Click on the screen to allow access to device orientation.");
@@ -62,10 +125,16 @@ function paintCanvas() {
             default:
                 console.error("Invalid permission state of device orientation", deviceOrientationPermissionState);
         }
+        return;
     }
+    if (screenAndDeviceOrientation === null || screenAndDeviceOrientation.alpha === null) {
+        drawTextWithWrapping("Loading...");
+        return;
+    }
+    drawTextWithWrapping(screenAndDeviceOrientation + "");
+    requestAnimationFrame(paintCanvas);
 }
 function drawTextWithWrapping(text) {
-    console.assert(canvasContext !== null);
     const allowedMaxWidth = canvasElement.width * 0.8;
     const words = text.split(" ");
     const lines = [];
