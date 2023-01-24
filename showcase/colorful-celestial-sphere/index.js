@@ -110,7 +110,7 @@ function startRenderLoop() {
     else {
         window.addEventListener("deviceorientation", updateDeviceOrientation);
     }
-    requestAnimationFrame(paintCanvas);
+    window.requestAnimationFrame(paintCanvas);
 }
 function paintCanvas() {
     canvasContext.fillStyle = "black";
