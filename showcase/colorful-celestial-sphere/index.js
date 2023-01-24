@@ -48,7 +48,7 @@ function onWindowResize() {
     canvasElement.style.height = `${window.innerHeight}px`;
     canvasElement.width = window.innerWidth;
     canvasElement.height = window.innerHeight;
-    paintCanvas();
+    window.requestAnimationFrame(paintCanvas);
 }
 function startRenderLoop() {
     function updateScreenOrientation() {
@@ -88,7 +88,7 @@ function startRenderLoop() {
         screenAndDeviceOrientation.beta = event.beta / degreeToRadian;
         screenAndDeviceOrientation.gamma = event.gamma / degreeToRadian;
         if (initialUpdate) {
-            paintCanvas();
+            window.requestAnimationFrame(paintCanvas);
         }
     }
     screenAndDeviceOrientation = {
@@ -110,7 +110,7 @@ function startRenderLoop() {
     else {
         window.addEventListener("deviceorientation", updateDeviceOrientation);
     }
-    paintCanvas();
+    requestAnimationFrame(paintCanvas);
 }
 function paintCanvas() {
     canvasContext.fillStyle = "black";
@@ -138,7 +138,7 @@ function paintCanvas() {
         return;
     }
     drawCelestialSphere();
-    requestAnimationFrame(paintCanvas);
+    window.requestAnimationFrame(paintCanvas);
 }
 function drawTextWithWrapping(text) {
     const allowedMaxWidth = canvasElement.width * 0.8;
@@ -203,10 +203,10 @@ function drawCelestialSphere() {
             screenX /= length;
             screenY /= length;
         }
-        const radius = Math.acos(Math.min(screenZ, 1)) / (Math.PI / 2);
+        const distanceFromCenter = Math.acos(Math.min(screenZ, 1)) / (Math.PI / 2);
         canvasContext.fillStyle = `hsl(${theta * (180 / Math.PI)}, ${1 - phi / (Math.PI / 2)}, 0.5)`;
         canvasContext.beginPath();
-        canvasContext.arc(screenX, screenY, radius, 0, Math.PI * 2);
+        canvasContext.arc(screenX * distanceFromCenter, screenY * distanceFromCenter, 0.05, 0, Math.PI * 2);
         canvasContext.fill();
     }
     for (let i = 0; i < 9; ++i) {
