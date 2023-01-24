@@ -21,10 +21,7 @@ function main() {
     }
 }
 function handleOrientationPermission() {
-    if (typeof DeviceOrientationEvent === "undefined" || typeof DeviceOrientationEvent.requestPermission !== "function") {
-        deviceOrientationPermissionState = "granted";
-    }
-    else {
+    if (typeof DeviceOrientationEvent !== "undefined" && typeof DeviceOrientationEvent.requestPermission === "function") {
         canvasElement.addEventListener("click", () => __awaiter(this, void 0, void 0, function* () {
             const response = yield DeviceOrientationEvent.requestPermission();
             if (response === "granted") {
@@ -36,6 +33,12 @@ function handleOrientationPermission() {
                 paintCanvas();
             }
         }), { once: true });
+    }
+    else if ("ondeviceorientationabsolute" in window || "ondeviceorientation" in window) {
+        deviceOrientationPermissionState = "granted";
+    }
+    else {
+        deviceOrientationPermissionState = "unsupported";
     }
 }
 function onWindowResize() {
@@ -75,6 +78,7 @@ function startRenderLoop() {
     }
     function updateDeviceOrientation(event) {
         const initialUpdate = screenAndDeviceOrientation.alpha === null;
+        const degreeToRadian = 180 / Math.PI;
         if ("webkitCompassHeading" in event) {
             screenAndDeviceOrientation.alpha = (360 - event.webkitCompassHeading) / degreeToRadian;
         }
@@ -100,7 +104,6 @@ function startRenderLoop() {
         window.addEventListener("orientationchange", updateScreenOrientation);
     }
     updateScreenOrientation();
-    const degreeToRadian = 90 / Math.PI;
     if ("ondeviceorientationabsolute" in window) {
         window.addEventListener("deviceorientationabsolute", updateDeviceOrientation);
     }
@@ -113,7 +116,7 @@ function paintCanvas() {
     canvasContext.fillStyle = "black";
     canvasContext.fillRect(0, 0, canvasElement.width, canvasElement.height);
     canvasContext.fillStyle = "white";
-    canvasContext.font = "6vmin monospace";
+    canvasContext.font = "5vmin monospace";
     if (deviceOrientationPermissionState !== "granted") {
         switch (deviceOrientationPermissionState) {
             case "unknown":
@@ -121,6 +124,9 @@ function paintCanvas() {
                 break;
             case "denied":
                 drawTextWithWrapping("Cannot launch app because access to device orientation was denied.");
+                break;
+            case "unsupported":
+                drawTextWithWrapping("Cannot launch app because your browser does not support detecting device orientation.");
                 break;
             default:
                 console.error("Invalid permission state of device orientation", deviceOrientationPermissionState);
@@ -131,7 +137,7 @@ function paintCanvas() {
         drawTextWithWrapping("Loading...");
         return;
     }
-    drawTextWithWrapping(`screenAngle: ${screenAndDeviceOrientation.screenAngle}, alpha: ${screenAndDeviceOrientation.alpha}, beta: ${screenAndDeviceOrientation.beta}, gamma: ${screenAndDeviceOrientation.gamma}`);
+    drawTextWithWrapping(screenAndDeviceOrientation + "");
     requestAnimationFrame(paintCanvas);
 }
 function drawTextWithWrapping(text) {
@@ -174,6 +180,43 @@ function drawTextWithWrapping(text) {
         canvasContext.fillText(lines[i], textX, textY + (lineHeights[i] - fontHeights[i]) * 0.5, allowedMaxWidth);
         textY += lineHeights[i];
     }
+}
+function drawCelestialSphere() {
+    canvasContext.fillStyle = "black";
+    canvasContext.fillRect(0, 0, canvasElement.width, canvasElement.height);
+    canvasContext.translate(canvasElement.width / 2, canvasElement.height / 2);
+    canvasContext.scale(500, 500);
+    const earthToScreenMatrix = computeEarthToScreenMatrix(screenAndDeviceOrientation);
+    function drawPoint(theta, phi) {
+        const earthCoords = [
+            Math.sin(theta) * Math.cos(phi),
+            Math.cos(theta) * Math.cos(phi),
+            Math.sin(phi),
+        ];
+        let [screenX, screenY, screenZ] = multiplyMatrixVector(earthToScreenMatrix, earthCoords);
+        console.log("screen", screenX, screenY, screenZ);
+        if (screenZ < 0) {
+            return;
+        }
+        if (screenX !== 0 || screenY !== 0) {
+            const length = Math.sqrt(screenX * screenX + screenY * screenY);
+            screenX /= length;
+            screenY /= length;
+        }
+        const radius = Math.acos(Math.min(screenZ, 1)) / (Math.PI / 2);
+        canvasContext.fillStyle = `hsl(${theta * (180 / Math.PI)}, ${1 - phi / (Math.PI / 2)}, 0.5)`;
+        canvasContext.beginPath();
+        canvasContext.arc(screenX, screenY, radius, 0, Math.PI * 2);
+        canvasContext.fill();
+    }
+    for (let i = 0; i < 9; ++i) {
+        const phi = i / 10 * Math.PI;
+        for (let j = 0; j < 35; ++i) {
+            const theta = j / 18 * Math.PI;
+            drawPoint(theta, phi);
+        }
+    }
+    canvasContext.resetTransform();
 }
 function computeEarthToScreenMatrix(orientation) {
     const sinAlpha = Math.sin(orientation.alpha), cosAlpha = Math.cos(orientation.alpha);
