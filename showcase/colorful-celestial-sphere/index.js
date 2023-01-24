@@ -140,7 +140,7 @@ function paintCanvas() {
         return;
     }
     // drawCelestialSphere();
-    drawCelestialSphere(`alpha: ${screenAndDeviceOrientation.tmpAlpha}, webkitHeading: ${screenAndDeviceOrientation.tmpWebkitCompassHeading}`);
+    drawTextWithWrapping(`alpha: ${screenAndDeviceOrientation.tmpAlpha}, webkitHeading: ${screenAndDeviceOrientation.tmpWebkitCompassHeading}`);
     window.requestAnimationFrame(paintCanvas);
 }
 function drawTextWithWrapping(text) {
