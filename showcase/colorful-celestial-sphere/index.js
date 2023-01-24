@@ -174,10 +174,10 @@ function drawTextWithWrapping(text) {
     if (currentLine.length > 0) {
         addLine();
     }
-    let textX = (canvasElement.width - actualMaxWidth) * 0.5;
-    let textY = (canvasElement.height - lineHeights.reduce((a, b) => a + b, 0)) * 0.5;
+    let textX = (canvasElement.width - actualMaxWidth) / 2;
+    let textY = (canvasElement.height - lineHeights.reduce((a, b) => a + b, 0)) / 2;
     for (let i = 0; i < lines.length; ++i) {
-        canvasContext.fillText(lines[i], textX, textY + (lineHeights[i] - fontHeights[i]) * 0.5, allowedMaxWidth);
+        canvasContext.fillText(lines[i], textX, textY + (lineHeights[i] - fontHeights[i]) / 2, allowedMaxWidth);
         textY += lineHeights[i];
     }
 }
@@ -185,7 +185,8 @@ function drawCelestialSphere() {
     canvasContext.fillStyle = "black";
     canvasContext.fillRect(0, 0, canvasElement.width, canvasElement.height);
     canvasContext.translate(canvasElement.width / 2, canvasElement.height / 2);
-    canvasContext.scale(500, 500);
+    const scale = Math.min(canvasElement.width, canvasElement.height) / 2;
+    canvasContext.scale(scale, scale);
     const earthToScreenMatrix = computeEarthToScreenMatrix(screenAndDeviceOrientation);
     function drawPoint(theta, phi) {
         const earthCoords = [
@@ -198,7 +199,7 @@ function drawCelestialSphere() {
             return;
         }
         if (screenX !== 0 || screenY !== 0) {
-            const length = Math.sqrt(screenX * screenX + screenY * screenY);
+            const length = Math.hypot(screenX, screenY);
             screenX /= length;
             screenY /= length;
         }
