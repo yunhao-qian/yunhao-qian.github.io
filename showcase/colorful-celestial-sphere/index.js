@@ -34,7 +34,7 @@ function handleOrientationPermission() {
             }
         }), { once: true });
     }
-    else if ("ondeviceorientationabsolute" in window || "ondeviceorientation" in window) {
+    else if (typeof window.ondeviceorientationabsolute !== "undefined" || typeof window.ondeviceorientation !== "undefined") {
         deviceOrientationPermissionState = "granted";
     }
     else {
@@ -52,7 +52,7 @@ function onWindowResize() {
 }
 function startRenderLoop() {
     function updateScreenOrientation() {
-        if ("orientation" in window.screen) {
+        if (typeof window.screen.orientation !== "undefined") {
             const angle = window.screen.orientation.angle;
             console.assert(angle === 0 || angle === 90 || angle === 180 || angle == 270);
             screenAndDeviceOrientation.screenAngle = angle;
@@ -79,10 +79,8 @@ function startRenderLoop() {
     function updateDeviceOrientation(event) {
         const initialUpdate = screenAndDeviceOrientation.alpha === null;
         const degreeToRadian = 180 / Math.PI;
-        if ("webkitCompassHeading" in event) {
+        if (false && typeof event.webkitCompassHeading !== "undefined") {
             screenAndDeviceOrientation.alpha = (360 - event.webkitCompassHeading) / degreeToRadian;
-            screenAndDeviceOrientation.tmpAlpha = event.alpha;
-            screenAndDeviceOrientation.tmpWebkitCompassHeading = event.webkitCompassHeading;
         }
         else {
             screenAndDeviceOrientation.alpha = event.alpha / degreeToRadian;
@@ -99,14 +97,14 @@ function startRenderLoop() {
         beta: null,
         gamma: null,
     };
-    if ("orientation" in window.screen) {
+    if (typeof window.screen.orientation !== "undefined") {
         window.screen.orientation.onchange = updateScreenOrientation;
     }
     else {
         window.addEventListener("orientationchange", updateScreenOrientation);
     }
     updateScreenOrientation();
-    if ("ondeviceorientationabsolute" in window) {
+    if (typeof window.ondeviceorientationabsolute !== "undefined") {
         window.addEventListener("deviceorientationabsolute", updateDeviceOrientation);
     }
     else {
@@ -139,8 +137,7 @@ function paintCanvas() {
         drawTextWithWrapping("Loading...");
         return;
     }
-    // drawCelestialSphere();
-    drawTextWithWrapping(`alpha: ${screenAndDeviceOrientation.tmpAlpha}, webkitHeading: ${screenAndDeviceOrientation.tmpWebkitCompassHeading}`);
+    drawCelestialSphere();
     window.requestAnimationFrame(paintCanvas);
 }
 function drawTextWithWrapping(text) {
