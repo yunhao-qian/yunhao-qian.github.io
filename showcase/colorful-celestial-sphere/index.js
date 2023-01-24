@@ -185,7 +185,7 @@ function drawCelestialSphere() {
     canvasContext.fillStyle = "black";
     canvasContext.fillRect(0, 0, canvasElement.width, canvasElement.height);
     canvasContext.translate(canvasElement.width / 2, canvasElement.height / 2);
-    canvasContext.scale(500, 500);
+    canvasContext.scale(320, 320);
     const earthToScreenMatrix = computeEarthToScreenMatrix(screenAndDeviceOrientation);
     function drawPoint(theta, phi) {
         const earthCoords = [
@@ -194,19 +194,20 @@ function drawCelestialSphere() {
             Math.sin(phi),
         ];
         let [screenX, screenY, screenZ] = multiplyMatrixVector(earthToScreenMatrix, earthCoords);
-        console.log("screen", screenX, screenY, screenZ);
         if (screenZ < 0) {
             return;
         }
+        console.log("screen", screenX, screenY, screenZ, "length", Math.sqrt(screenX * screenX + screenY * screenY + screenZ * screenZ));
         if (screenX !== 0 || screenY !== 0) {
             const length = Math.sqrt(screenX * screenX + screenY * screenY);
             screenX /= length;
             screenY /= length;
         }
         const distanceFromCenter = Math.acos(Math.min(screenZ, 1)) / (Math.PI / 2);
-        canvasContext.fillStyle = `hsl(${theta * (180 / Math.PI)}, ${1 - phi / (Math.PI / 2)}, 0.5)`;
         canvasContext.beginPath();
         canvasContext.arc(screenX * distanceFromCenter, screenY * distanceFromCenter, 0.05, 0, Math.PI * 2);
+        canvasContext.fillStyle = `hsl(${theta}rad, ${(1 - phi / (Math.PI / 2)) * 100}%, 50%)`;
+        console.log(`hsl(${theta}rad, ${(1 - phi / (Math.PI / 2)) * 100}%, 50%)`);
         canvasContext.fill();
     }
     for (let i = 0; i < 9; ++i) {
