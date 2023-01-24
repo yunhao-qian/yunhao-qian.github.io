@@ -81,6 +81,8 @@ function startRenderLoop() {
         const degreeToRadian = 180 / Math.PI;
         if ("webkitCompassHeading" in event) {
             screenAndDeviceOrientation.alpha = (360 - event.webkitCompassHeading) / degreeToRadian;
+            screenAndDeviceOrientation.tmpAlpha = event.alpha;
+            screenAndDeviceOrientation.tmpWebkitCompassHeading = event.webkitCompassHeading;
         }
         else {
             screenAndDeviceOrientation.alpha = event.alpha / degreeToRadian;
@@ -137,7 +139,8 @@ function paintCanvas() {
         drawTextWithWrapping("Loading...");
         return;
     }
-    drawCelestialSphere();
+    // drawCelestialSphere();
+    drawCelestialSphere(`alpha: ${screenAndDeviceOrientation.tmpAlpha}, webkitHeading: ${screenAndDeviceOrientation.tmpWebkitCompassHeading}`);
     window.requestAnimationFrame(paintCanvas);
 }
 function drawTextWithWrapping(text) {
@@ -197,7 +200,6 @@ function drawCelestialSphere() {
         if (screenZ < 0) {
             return;
         }
-        console.log("screen", screenX, screenY, screenZ, "length", Math.sqrt(screenX * screenX + screenY * screenY + screenZ * screenZ));
         if (screenX !== 0 || screenY !== 0) {
             const length = Math.sqrt(screenX * screenX + screenY * screenY);
             screenX /= length;
@@ -207,7 +209,6 @@ function drawCelestialSphere() {
         canvasContext.beginPath();
         canvasContext.arc(screenX * distanceFromCenter, screenY * distanceFromCenter, 0.02, 0, Math.PI * 2);
         canvasContext.fillStyle = `hsl(${theta}rad, ${(1 - phi / (Math.PI / 2)) * 100}%, 50%)`;
-        console.log(`hsl(${theta}rad, ${(1 - phi / (Math.PI / 2)) * 100}%, 50%)`);
         canvasContext.fill();
     }
     for (let i = 0; i < 10; ++i) {
