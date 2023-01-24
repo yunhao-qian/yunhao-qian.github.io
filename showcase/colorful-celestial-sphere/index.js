@@ -137,7 +137,7 @@ function paintCanvas() {
         drawTextWithWrapping("Loading...");
         return;
     }
-    drawTextWithWrapping(screenAndDeviceOrientation + "");
+    drawCelestialSphere();
     requestAnimationFrame(paintCanvas);
 }
 function drawTextWithWrapping(text) {
