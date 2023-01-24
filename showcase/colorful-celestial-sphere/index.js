@@ -211,7 +211,7 @@ function drawCelestialSphere() {
     }
     for (let i = 0; i < 9; ++i) {
         const phi = i / 10 * Math.PI;
-        for (let j = 0; j < 35; ++i) {
+        for (let j = 0; j < 35; ++j) {
             const theta = j / 18 * Math.PI;
             drawPoint(theta, phi);
         }
