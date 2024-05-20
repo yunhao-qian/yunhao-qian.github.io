@@ -1,0 +1,14 @@
+{
+  "short_name": "Othello",
+  "name": "Othello Game",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

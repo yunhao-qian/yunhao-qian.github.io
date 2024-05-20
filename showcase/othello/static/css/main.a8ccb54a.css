@@ -1,0 +1,2 @@
+.board-svg-container{container:board-svg-container-layout/size;flex:1 1;position:relative}.board-svg{aspect-ratio:1/1;height:auto;left:50%;position:absolute;top:50%;transform:translate(-50%,-50%);width:100%}@container board-svg-container-layout (aspect-ratio > 1){.board-svg{height:100%;width:auto}}#root,#root>div,body,html{height:100%;margin:0;padding:0}
+/*# sourceMappingURL=main.a8ccb54a.css.map*/
