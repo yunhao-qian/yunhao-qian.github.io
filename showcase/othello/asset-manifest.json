@@ -1,18 +1,18 @@
 {
   "files": {
     "main.css": "/showcase/othello/static/css/main.a8ccb54a.css",
-    "main.js": "/showcase/othello/static/js/main.5710e51e.js",
-    "static/js/857.bb956e24.chunk.js": "/showcase/othello/static/js/857.bb956e24.chunk.js",
+    "main.js": "/showcase/othello/static/js/main.e86db743.js",
+    "static/js/857.7f54b8bc.chunk.js": "/showcase/othello/static/js/857.7f54b8bc.chunk.js",
     "static/js/453.3017789b.chunk.js": "/showcase/othello/static/js/453.3017789b.chunk.js",
-    "module.wasm": "/showcase/othello/bb6bb2ac7b5fe225df69.module.wasm",
+    "module.wasm": "/showcase/othello/3dd24ac73cfc4643d3dd.module.wasm",
     "index.html": "/showcase/othello/index.html",
     "main.a8ccb54a.css.map": "/showcase/othello/static/css/main.a8ccb54a.css.map",
-    "main.5710e51e.js.map": "/showcase/othello/static/js/main.5710e51e.js.map",
-    "857.bb956e24.chunk.js.map": "/showcase/othello/static/js/857.bb956e24.chunk.js.map",
+    "main.e86db743.js.map": "/showcase/othello/static/js/main.e86db743.js.map",
+    "857.7f54b8bc.chunk.js.map": "/showcase/othello/static/js/857.7f54b8bc.chunk.js.map",
     "453.3017789b.chunk.js.map": "/showcase/othello/static/js/453.3017789b.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.a8ccb54a.css",
-    "static/js/main.5710e51e.js"
+    "static/js/main.e86db743.js"
   ]
 }
